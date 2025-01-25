@@ -1,0 +1,9 @@
+.node {
+    height: 30px;
+    width: 30px;
+    border: 1px solid black;
+
+    &-selected {
+        background-color: black;
+    }
+}
