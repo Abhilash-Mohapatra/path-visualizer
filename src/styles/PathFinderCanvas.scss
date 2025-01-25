@@ -4,3 +4,11 @@
     justify-content: center;
     gap: 2px;
 }
+
+.canvas-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    align-items: center;
+}

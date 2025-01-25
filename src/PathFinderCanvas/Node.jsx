@@ -1,13 +1,14 @@
 function Node(props) {
-  const nodeId = `node-${props.row}-${props.col}`
-  
-  const handleClick = (ele) => {
-    ele.target.classList.add('node-selected')
-  }
+  const { onMouseDown,onMouseUp,onMouseOver,row,col } = props;
+  const nodeId = `node-${row}-${col}`
 
   return (
     <>
-      <div className="node" id={nodeId} onClick={handleClick}></div>
+      <div className="node" id={nodeId} 
+        onMouseDown={() => onMouseDown(row,col)}
+        onMouseUp={() => onMouseUp()}
+        onMouseEnter={() => onMouseOver(row,col)}
+      ></div>
     </>
   )
 }
