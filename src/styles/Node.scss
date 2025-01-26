@@ -5,7 +5,7 @@
     background-color: #FBF5E5;
 
     &-start {
-        background-color: adjust-hue($color: #000000, $degrees: 0);
+        background-color: #212121;
         &::before {
             content: "\229A";
             display: flex;
