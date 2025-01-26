@@ -73,7 +73,6 @@ function PathFinderCanvas() {
 
     const visitedNodes = dijkstra(grid, startNode, destinationNode);
     const shortestPath = getNodesInShortestPathOrder(destinationNode);
-
     animateVisitedNodes(visitedNodes,shortestPath);
   }
 
@@ -107,9 +106,7 @@ function PathFinderCanvas() {
   }
 
   useEffect(() => {
-    setGrid(createGrid(NUMBER_OF_ROWS,NUMBER_OF_COLS));
-    START_NODE_ROW = 10;
-    START_NODE_COL = 10;
+    setGrid(createGrid(NUMBER_OF_ROWS,NUMBER_OF_COLS,START_NODE_ROW,START_NODE_COL,DESTINATION_NODE_ROW,DESTINATION_NODE_COL));
   },[reset])
 
 

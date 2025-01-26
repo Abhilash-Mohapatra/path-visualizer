@@ -2,8 +2,8 @@ const createNode = (row,col) => {
     return {
         row: row,
         col: col,
-        isStart: row == 10 && col == 10,
-        isDestination: row == 15 && col == 30,
+        isStart: false,
+        isDestination: false,
         isVisited: false,
         distance: Infinity,
         isWall: false,  
@@ -11,12 +11,15 @@ const createNode = (row,col) => {
     }
 }
 
-export const createGrid = (NUMBER_OF_ROWS,NUMBER_OF_COLS) => {
+export const createGrid = (NUMBER_OF_ROWS,NUMBER_OF_COLS,startRow,startCol,destinationRow,destinationCol) => {
     const grid = [];
     for(let i = 0 ; i < NUMBER_OF_ROWS ; i++) {
         const currRow = [];
         for(let j = 0 ; j < NUMBER_OF_COLS ; j++) {
-            currRow.push(createNode(i,j));
+            const node = createNode(i,j);
+            if(i == startRow && j == startCol) node.isStart = true;
+            if(i == destinationRow && j == destinationCol) node.isDestination = true;
+            currRow.push(node);
         }
         grid.push(currRow);
     }
