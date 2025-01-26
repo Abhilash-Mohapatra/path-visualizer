@@ -1,5 +1,5 @@
 function Node(props) {
-  const { onMouseDown,onMouseUp,onMouseOver,row,col,isStart,isDestination,isWall,isVisited } = props;
+  const { onMouseDown,onMouseUp,onMouseOver,onMouseOut,row,col,isStart,isDestination,isWall,isVisited } = props;
   const nodeId = `node-${row}-${col}`
 
   const customClassList = () => {
@@ -14,6 +14,7 @@ function Node(props) {
         onMouseDown={() => onMouseDown(row,col)}
         onMouseUp={() => onMouseUp(row,col)}
         onMouseEnter={() => onMouseOver(row,col)}
+        onMouseOut={() => onMouseOut(row,col)}
       ></div>
     </>
   )

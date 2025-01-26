@@ -5,7 +5,7 @@
     background-color: #FBF5E5;
 
     &-start {
-        background-color: #212121;
+        background-color: #212121 !important;
         &::before {
             content: "\229A";
             display: flex;
@@ -20,6 +20,8 @@
 
     &-wall {
         background-color: #A35C7A;
+        animation-name: shortestpath;
+        animation-duration: 1s;
     }
 
     &-visited {
@@ -30,11 +32,28 @@
 
     &-path {
         background-color: #212121;
+        animation-name: shortestpath;
+        animation-duration: 1s;
     }
 
     &-current {
         background-color: purple;
         border-radius: 50%;
+    }
+
+    @keyframes shortestpath {
+        0% {
+            transform: scale(1);
+        }
+        25% {
+            transform: scale(1.5);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
     }
 
     @keyframes visitednode {

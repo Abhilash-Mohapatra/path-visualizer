@@ -4,12 +4,12 @@ import TopNav from "../MainScreen/TopNav";
 import { createGrid } from '../helper/helper';
 import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 
-const NUMBER_OF_ROWS = 20;
-const NUMBER_OF_COLS = 40;
-const START_NODE_ROW = 10;
-const START_NODE_COL = 10;
-const DESTINATION_NODE_ROW = 15;
-const DESTINATION_NODE_COL = 30;
+const NUMBER_OF_ROWS = 30;
+const NUMBER_OF_COLS = 70;
+let START_NODE_ROW = 10;
+let START_NODE_COL = 10;
+let DESTINATION_NODE_ROW = 15;
+let DESTINATION_NODE_COL = 30;
 
 function PathFinderCanvas() {
   const [isMouseActive,setIsMouseActive] = useState(false);
@@ -32,18 +32,36 @@ function PathFinderCanvas() {
     }
   }
   const handleMouseOver = (row,col) => {
-    if(isMouseActive && !grid[row][col].isDestination && !grid[row][col].isStart) {
+    const ele = document.getElementById(`node-${row}-${col}`);
+    if(moveSource) {
+      ele.classList.add('node-start');
+    }else if(moveDestination) {
+      ele.classList.add('node-destination');
+    }else if(isMouseActive && !grid[row][col].isDestination && !grid[row][col].isStart) {
       grid[row][col].isWall = !grid[row][col].isWall;
-      document.getElementById(`node-${row}-${col}`).classList.toggle('node-wall');
+      ele.classList.toggle('node-wall');
     }
   }
+
+  const handleMouseOut = (row,col) => {
+    const ele = document.getElementById(`node-${row}-${col}`);
+    if(moveSource) {
+      ele.classList.remove('node-start');
+    }else if(moveDestination) {
+      ele.classList.remove('node-destination');
+    }
+  }
+
   const handleMouseUp = (row,col) => {
     if(moveSource) {
-      console.log(row,col);
       grid[row][col].isStart = true;
+      START_NODE_ROW = row;
+      START_NODE_COL = col;
       setMoveSource(false);
     } else if(moveDestination) {
       grid[row][col].isDestination = true;
+      DESTINATION_NODE_ROW = row;
+      DESTINATION_NODE_COL = col;
       setMoveDestination(false);
     }
     setIsMouseActive(false);
@@ -67,7 +85,7 @@ function PathFinderCanvas() {
             setTimeout(()=> {
               const node = shortestPath[j];
               document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-path');
-            },10 * j)
+            },20 * j)
           }
         },10*i)
         return;
@@ -90,6 +108,8 @@ function PathFinderCanvas() {
 
   useEffect(() => {
     setGrid(createGrid(NUMBER_OF_ROWS,NUMBER_OF_COLS));
+    START_NODE_ROW = 10;
+    START_NODE_COL = 10;
   },[reset])
 
 
@@ -110,6 +130,7 @@ function PathFinderCanvas() {
                       onMouseDown={handleMouseDown} 
                       onMouseUp={handleMouseUp} 
                       onMouseOver={handleMouseOver}
+                      onMouseOut={handleMouseOut}
                     >
                     </Node>
                   )

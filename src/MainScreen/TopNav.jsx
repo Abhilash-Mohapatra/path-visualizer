@@ -8,7 +8,7 @@ function TopNav(props) {
     }
     return(
         <>
-            <div className="nav">
+            <div className="topnav">
                 <button className="visualize" onClick={handleReset}>Reset</button>
                 <button className="visualize" onClick={handleVisualize}>Visualize</button>
             </div>
