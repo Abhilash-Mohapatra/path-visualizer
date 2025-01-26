@@ -2,13 +2,25 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 2px;
+    gap: 1px;
 }
 
 .canvas-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 2px;
+    gap: 1px;
     align-items: center;
+}
+
+.visualize {
+    height: 40px;
+    background-color: white;
+    width: 100px;
+    border: 1px solid black;
+    border-radius: 5px;
+    &:hover {
+        background-color: black;
+        color: white;
+    }
 }
