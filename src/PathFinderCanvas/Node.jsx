@@ -1,10 +1,10 @@
 function Node(props) {
-  const { onMouseDown,onMouseUp,onMouseOver,row,col,isStart,isDestination,isWall } = props;
+  const { onMouseDown,onMouseUp,onMouseOver,row,col,isStart,isDestination,isWall,isVisited } = props;
   const nodeId = `node-${row}-${col}`
 
   const customClassList = () => {
     let classes = 'node ';
-    classes += isStart ? 'node-start' : isDestination ? 'node-destination' : isWall ? 'node-wall' : '';
+    classes += isStart ? 'node-start' : isDestination ? 'node-destination' : isWall ? 'node-wall' : isVisited ? 'node-visited' : '';
     return classes;
   }
 
@@ -12,7 +12,7 @@ function Node(props) {
     <>
       <div className={`${customClassList()}`} id={nodeId} 
         onMouseDown={() => onMouseDown(row,col)}
-        onMouseUp={() => onMouseUp()}
+        onMouseUp={() => onMouseUp(row,col)}
         onMouseEnter={() => onMouseOver(row,col)}
       ></div>
     </>

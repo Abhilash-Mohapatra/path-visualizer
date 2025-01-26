@@ -1,12 +1,11 @@
-import { MinHeap } from "@datastructures-js/heap";
-
 export const dijkstra = (grid, startNode, destinationNode) => {
     const visitedNodesInOrder = [];
-    const unvisitedNodes = new MinHeap((node) => node.distance);
     startNode.distance = 0;
-    unvisitedNodes.insert(startNode);
-    while(!unvisitedNodes.isEmpty()) {
-        const currNode = unvisitedNodes.extractRoot();
+    const unvisitedNodes = getAllNodes(grid);
+    while(!!unvisitedNodes.length) {
+        sortNodesByDistance(unvisitedNodes);
+        const currNode =  unvisitedNodes.shift();
+
         if(currNode.isWall) continue;
         
         if(currNode.distance === Infinity) return visitedNodesInOrder;
@@ -14,22 +13,21 @@ export const dijkstra = (grid, startNode, destinationNode) => {
         currNode.isVisited = true;
         visitedNodesInOrder.push(currNode);
 
-        document.getElementById(`node-${currNode.row}-${currNode.col}`).classList.add('node-visited')
-        if(currNode === destinationNode) {
-            console.log("Found the path :) ");
-            return visitedNodesInOrder;
-        }
+        if(currNode === destinationNode) return visitedNodesInOrder;
 
-        updateUnvisitedNodes(currNode,grid,unvisitedNodes);
+        updateUnvisitedNodes(currNode,grid);
     }
 }
 
-const updateUnvisitedNodes = (node,grid,unvisitedNodes) => {
+function sortNodesByDistance(unvisitedNodes) {
+    unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
+}
+
+const updateUnvisitedNodes = (node,grid) => {
     const unvisitedNeighbors = getUnvisitedNeighourNodes(node, grid);
     for (const neighbor of unvisitedNeighbors) {
         neighbor.distance = node.distance + 1;
         neighbor.prevNode = node;
-        unvisitedNodes.insert(neighbor);
     }
 }
 
@@ -41,6 +39,16 @@ const getUnvisitedNeighourNodes = (node,grid) => {
     if (col > 0) neighbors.push(grid[row][col - 1]);
     if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
     return neighbors.filter(neighbor => !neighbor.isVisited);
+}
+
+function getAllNodes(grid) {
+    const nodes = [];
+    for (const row of grid) {
+      for (const node of row) {
+        nodes.push(node);
+      }
+    }
+    return nodes;
 }
 
 export function getNodesInShortestPathOrder(finishNode) {

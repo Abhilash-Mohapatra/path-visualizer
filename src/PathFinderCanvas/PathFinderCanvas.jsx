@@ -13,55 +13,89 @@ const DESTINATION_NODE_COL = 30;
 
 function PathFinderCanvas() {
   const [isMouseActive,setIsMouseActive] = useState(false);
-  const [startNode,setStartNode] = useState({});
-  const [destinationNode,setDestinationNode] = useState({});
+  const [reset,setReset] = useState(0);
+  const [moveSource,setMoveSource] = useState(false);
+  const [moveDestination,setMoveDestination] = useState(false);
   const [grid,setGrid] = useState([]);
 
   const handleMouseDown = (row,col) => {
-    setIsMouseActive(true);
-    if(!grid[row][col].isDestination && !grid[row][col].isStart){
-      setGrid(getNewGridWithWallToggled(grid,row,col));
+    if(grid[row][col].isStart) {
+      setMoveSource(true);
+      grid[row][col].isStart = false;
+    } else if(grid[row][col].isDestination) {
+      setMoveDestination(true);
+      grid[row][col].isDestination = !grid[row][col].isDestination;
+    } else {
+      setIsMouseActive(true);
+      grid[row][col].isWall = !grid[row][col].isWall;
+      document.getElementById(`node-${row}-${col}`).classList.toggle('node-wall');
     }
   }
   const handleMouseOver = (row,col) => {
     if(isMouseActive && !grid[row][col].isDestination && !grid[row][col].isStart) {
-      setGrid(getNewGridWithWallToggled(grid,row,col));
+      grid[row][col].isWall = !grid[row][col].isWall;
+      document.getElementById(`node-${row}-${col}`).classList.toggle('node-wall');
     }
   }
-  const handleMouseUp = () => {
+  const handleMouseUp = (row,col) => {
+    if(moveSource) {
+      console.log(row,col);
+      grid[row][col].isStart = true;
+      setMoveSource(false);
+    } else if(moveDestination) {
+      grid[row][col].isDestination = true;
+      setMoveDestination(false);
+    }
     setIsMouseActive(false);
   }
 
   const startDijkstra = () => {
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const destinationNode = grid[DESTINATION_NODE_ROW][DESTINATION_NODE_COL];
-    const visitedNodes = dijkstra(grid, startNode, destinationNode);
 
+    const visitedNodes = dijkstra(grid, startNode, destinationNode);
     const shortestPath = getNodesInShortestPathOrder(destinationNode);
-    for(const node of shortestPath) {
-      document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-path');
+
+    animateVisitedNodes(visitedNodes,shortestPath);
+  }
+
+  const animateVisitedNodes = (visitedNodes,shortestPath) => {
+    for(let i = 1 ; i <= visitedNodes.length ; i++) {
+      if(i === visitedNodes.length) {
+        setTimeout(()=> {
+          for(let j = 0 ; j < shortestPath.length; j++) {
+            setTimeout(()=> {
+              const node = shortestPath[j];
+              document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-path');
+            },10 * j)
+          }
+        },10*i)
+        return;
+      }
+      setTimeout(()=>{
+        const node = visitedNodes[i-1];
+        document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-visited');
+        document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-current');
+        setTimeout(()=> {
+          document.getElementById(`node-${node.row}-${node.col}`).classList.remove('node-current');
+        },100);
+
+      },10 * i)
     }
+  }
+
+  const handleReset = () => {
+    setReset(reset => reset+1);
   }
 
   useEffect(() => {
     setGrid(createGrid(NUMBER_OF_ROWS,NUMBER_OF_COLS));
-  },[])
+  },[reset])
 
-
-  const getNewGridWithWallToggled = (grid, row, col) => {
-    const newGrid = grid.slice();
-    const node = newGrid[row][col];
-    const newNode = {
-      ...node,
-      isWall: !node.isWall,
-    };
-    newGrid[row][col] = newNode;
-    return newGrid;
-  };
 
   return (
     <>
-      <TopNav visualize={startDijkstra}></TopNav>
+      <TopNav visualize={startDijkstra} handleReset={handleReset}></TopNav>
       <div className="canvas-grid">
         {grid.map((row,rowIdx) => {
           return (
@@ -72,6 +106,7 @@ function PathFinderCanvas() {
                       isWall = {node.isWall}
                       isStart = {node.isStart}
                       isDestination = {node.isDestination}
+                      isVisited = {node.isVisited}
                       onMouseDown={handleMouseDown} 
                       onMouseUp={handleMouseUp} 
                       onMouseOver={handleMouseOver}
