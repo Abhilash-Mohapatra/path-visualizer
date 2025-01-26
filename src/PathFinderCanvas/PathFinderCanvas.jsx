@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Node from "./Node";
 import TopNav from "../MainScreen/TopNav";
 import { createGrid } from '../helper/helper';
-import { dijkstra } from "../algorithms/dijkstra";
+import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 
 const NUMBER_OF_ROWS = 20;
 const NUMBER_OF_COLS = 40;
@@ -35,8 +35,9 @@ function PathFinderCanvas() {
   const startDijkstra = () => {
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const destinationNode = grid[DESTINATION_NODE_ROW][DESTINATION_NODE_COL];
-    const shortestPath = dijkstra(grid, startNode, destinationNode);
+    const visitedNodes = dijkstra(grid, startNode, destinationNode);
 
+    const shortestPath = getNodesInShortestPathOrder(destinationNode);
     for(const node of shortestPath) {
       document.getElementById(`node-${node.row}-${node.col}`).classList.add('node-path');
     }
