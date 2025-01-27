@@ -24,6 +24,15 @@
         animation-duration: 1s;
     }
 
+    &-weight {
+        &::before {
+            display: inline-flex;
+            content: 'W';
+            height: 25px;
+            width: 25px;
+        }
+    }
+
     &-visited {
         background-color: #98D8EF;
         animation-name: visitednode;
@@ -34,10 +43,12 @@
         background-color: #212121;
         animation-name: shortestpath;
         animation-duration: 1s;
+        animation-iteration-count: infinite;
     }
 
     &-current {
         background-color: purple;
+        outline: 1px solid white;
         border-radius: 50%;
     }
 
@@ -46,10 +57,10 @@
             transform: scale(1);
         }
         25% {
-            transform: scale(1.5);
+            transform: scale(1.2);
         }
         50% {
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
         100% {
             transform: scale(1);
@@ -58,7 +69,7 @@
 
     @keyframes visitednode {
     0%   {
-        transform: scale(1.1);
+        transform: scale(0.5);
         background-color: #7AB2D3;
     }
     25%  {
@@ -66,10 +77,11 @@
         background-color: #B9E5E8;
     }
     50%  {
-        transform: scale(1.1);
+        transform: scale(0.5);
         background-color: #DFF2EB;
     }
     100% {
+        transform: scale(1);
         background-color: #98D8EF;
     }
     }

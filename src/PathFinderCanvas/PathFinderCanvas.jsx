@@ -16,6 +16,9 @@ function PathFinderCanvas() {
   const [reset,setReset] = useState(0);
   const [moveSource,setMoveSource] = useState(false);
   const [moveDestination,setMoveDestination] = useState(false);
+  const [isAddWeightMode,setIsAddWeightMode] = useState(false);
+  const [weightMode,setWeightMode] = useState(false);
+  const [currWeight,setCurrWeight] = useState(0);
   const [grid,setGrid] = useState([]);
 
   const handleMouseDown = (row,col) => {
@@ -25,6 +28,10 @@ function PathFinderCanvas() {
     } else if(grid[row][col].isDestination) {
       setMoveDestination(true);
       grid[row][col].isDestination = !grid[row][col].isDestination;
+    } else if(isAddWeightMode){
+      setWeightMode(true);
+      grid[row][col].weight = currWeight;
+      document.getElementById(`node-${row}-${col}`).classList.toggle('node-weight');
     } else {
       setIsMouseActive(true);
       grid[row][col].isWall = !grid[row][col].isWall;
@@ -37,7 +44,10 @@ function PathFinderCanvas() {
       ele.classList.add('node-start');
     }else if(moveDestination) {
       ele.classList.add('node-destination');
-    }else if(isMouseActive && !grid[row][col].isDestination && !grid[row][col].isStart) {
+    }else if(isAddWeightMode && weightMode){
+      grid[row][col].weight = currWeight;
+      ele.classList.toggle('node-weight');
+    } else if (isMouseActive && !grid[row][col].isDestination && !grid[row][col].isStart) {
       grid[row][col].isWall = !grid[row][col].isWall;
       ele.classList.toggle('node-wall');
     }
@@ -65,14 +75,17 @@ function PathFinderCanvas() {
       setMoveDestination(false);
     }
     setIsMouseActive(false);
+    setWeightMode(false);
   }
 
   const startDijkstra = () => {
+    // handleReset();
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const destinationNode = grid[DESTINATION_NODE_ROW][DESTINATION_NODE_COL];
 
     const visitedNodes = dijkstra(grid, startNode, destinationNode);
     const shortestPath = getNodesInShortestPathOrder(destinationNode);
+
     animateVisitedNodes(visitedNodes,shortestPath);
   }
 
@@ -102,6 +115,8 @@ function PathFinderCanvas() {
   }
 
   const handleReset = () => {
+    window.stop();
+    setGrid([]);
     setReset(reset => reset+1);
   }
 
@@ -109,10 +124,13 @@ function PathFinderCanvas() {
     setGrid(createGrid(NUMBER_OF_ROWS,NUMBER_OF_COLS,START_NODE_ROW,START_NODE_COL,DESTINATION_NODE_ROW,DESTINATION_NODE_COL));
   },[reset])
 
-
   return (
     <>
-      <TopNav visualize={startDijkstra} handleReset={handleReset}></TopNav>
+      <TopNav visualize={startDijkstra} 
+              handleReset={handleReset} 
+              setCurrWeight={setCurrWeight}
+              setIsAddWeightMode={setIsAddWeightMode}
+      ></TopNav>
       <div className="canvas-grid">
         {grid.map((row,rowIdx) => {
           return (

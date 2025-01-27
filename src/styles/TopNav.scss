@@ -8,4 +8,26 @@
     padding: 12px;
     gap: 24px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+    .weight-input {
+        height: 40px;
+        width: 100px;
+        border-radius: 5px;
+    }
+    .add-weight {
+        .weight-input-active.visualize {
+            background-color: blue;
+        }
+    }
+    .visualize {
+        height: 40px;
+        background-color: white;
+        width: 100px;
+        border: 1px solid black;
+        border-radius: 5px;
+        &:hover,&:active {
+            background-color: black;
+            color: white;
+        }
+    }
 }

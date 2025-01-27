@@ -7,7 +7,8 @@ const createNode = (row,col) => {
         isVisited: false,
         distance: Infinity,
         isWall: false,  
-        prevNode: null
+        prevNode: null,
+        weight: 1
     }
 }
 
